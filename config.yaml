@@ -1,0 +1,39 @@
+# Configuration du projet El Farol Bar
+
+environment:
+  n_consumers: 100
+  n_bars: 3
+  bar_capacity_optimal: 60
+  n_timesteps: 100
+
+training:
+  n_episodes: 1000
+  batch_size: 64
+  buffer_size: 10000
+  gamma: 0.99  # Discount factor
+  
+  # DQN parameters (consumers)
+  dqn:
+    learning_rate: 0.001
+    epsilon_start: 1.0
+    epsilon_end: 0.01
+    epsilon_decay: 0.995
+    target_update_frequency: 10
+  
+  # DDPG parameters (bars)
+  ddpg:
+    actor_lr: 0.0001
+    critic_lr: 0.001
+    tau: 0.005  # Soft update
+    noise_std: 0.2
+
+logging:
+  log_interval: 50  # Log every N episodes
+  save_interval: 200  # Save model every N episodes
+  tensorboard: true
+
+paths:
+  results_dir: "./results"
+  logs_dir: "./results/logs"
+  models_dir: "./results/models"
+  figures_dir: "./results/figures"
