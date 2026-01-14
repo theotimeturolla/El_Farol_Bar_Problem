@@ -5,7 +5,7 @@ Multiple bars competing for customers
 import numpy as np
 from pettingzoo import ParallelEnv
 from gymnasium import spaces
-from bar import Bar
+from environment.bar import Bar
 
 
 class MultiBarsEnv(ParallelEnv):
