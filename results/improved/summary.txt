@@ -1,0 +1,22 @@
+================================================================================
+IMPROVED BASELINE - SUMMARY
+================================================================================
+
+CONFIGURATION:
+  Episodes: 2000
+  Epsilon decay: 0.9995
+  Final epsilon: 0.0100
+
+RESULTS (Last 200 episodes):
+  Mean Attendance: 11.39
+  Std Deviation: 30.98
+  Median Attendance: 0.00
+  % within ±5: 0.0
+  % within ±10: 0.0
+  % within ±20: 0.0
+  Mean Reward: 51052.77
+  Final Epsilon: 0.0100
+
+VS BASELINE:
+  Std reduction: -5.2%
+  Coordination improvement: 0.0 percentage points
