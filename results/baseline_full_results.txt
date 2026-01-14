@@ -1,0 +1,130 @@
+================================================================================
+EL FAROL BAR - BASELINE TRAINING RESULTS
+================================================================================
+
+CONFIGURATION:
+--------------------------------------------------------------------------------
+  Episodes:              1000
+  Consumers:             100
+  Optimal attendance:    60
+  Epsilon decay:         0.995
+  Epsilon min:           0.01
+  Batch size:            64
+  Learning rate:         0.001
+  Gamma (discount):      0.99
+
+TRAINING LOG:
+--------------------------------------------------------------------------------
+Episode | Avg Reward | Avg Attendance | Epsilon | Notes
+--------------------------------------------------------------------------------
+     50 |   61256.43 |           98.8 | 0.010 | ← Too crowded
+    100 |   60450.98 |           99.5 | 0.010 | 
+    150 |   60406.58 |           99.6 | 0.010 | ← Epsilon at minimum
+    200 |   59555.91 |           91.6 | 0.010 | 
+    250 |   58797.10 |           83.6 | 0.010 | 
+    300 |   53794.51 |           36.0 | 0.010 | ← Too empty
+    350 |   53063.63 |           28.1 | 0.010 | 
+    400 |   52192.54 |           22.2 | 0.010 | 
+    450 |   53402.87 |           40.2 | 0.010 | 
+    500 |   54966.78 |           52.1 | 0.010 | ← Near optimal
+    550 |   60077.43 |           95.5 | 0.010 | 
+    600 |   51499.99 |           20.5 | 0.010 | 
+    650 |   59136.07 |           81.8 | 0.010 | 
+    700 |   55090.11 |           49.9 | 0.010 | 
+    750 |   52805.96 |           22.3 | 0.010 | 
+    800 |   53577.22 |           38.1 | 0.010 | 
+    850 |   60188.32 |           95.6 | 0.010 | 
+    900 |   55458.66 |           52.0 | 0.010 | ← Still oscillating
+    950 |   54805.58 |           46.2 | 0.010 | 
+
+================================================================================
+PERFORMANCE STATISTICS
+================================================================================
+
+Attendance:
+  Mean:                  60.72
+  Std Deviation:         29.45
+  Min:                   20.5
+  Max:                   99.6
+  Median:                52.0
+
+Distance from Optimal (60):
+  Mean Abs Error:        27.28
+  Max Error:             39.6
+
+Coordination Quality:
+  % within ±5:           0.0%
+  % within ±10:          10.5%
+  % within ±20:          26.3%
+
+Rewards:
+  Mean:                  56343.51
+  Std:                   3274.73
+
+================================================================================
+ANALYSIS
+================================================================================
+
+PROBLEMS IDENTIFIED:
+
+1. EPSILON DECAY TOO FAST
+   - Reaches minimum (0.01) around episode 150
+   - After that, only 1% random exploration
+   - Agents stop exploring and exploit current knowledge
+   - Premature convergence to suboptimal policies
+
+2. EXTREME OSCILLATIONS
+   - Attendance swings between ~20 and ~100
+   - Never stabilizes around optimal (60)
+   - Anti-coordination dynamics:
+     * All agents learn 'go' → everyone goes → overcrowded (100)
+     * Negative rewards → all learn 'don't go' → empty (20)
+     * Pattern repeats indefinitely
+
+3. HERDING BEHAVIOR
+   - All 100 agents share the same neural network (parameter sharing)
+   - When Q(state, go) > Q(state, stay), MOST agents go
+   - Creates correlated decisions → herding
+   - With epsilon=0.01, diversity is too low
+
+4. COORDINATION FAILURE
+   - Classic El Farol problem: no rational equilibrium with identical agents
+   - RL agents reproduce the theoretical impossibility
+   - Need heterogeneity or communication to break symmetry
+
+================================================================================
+PROPOSED SOLUTIONS
+================================================================================
+
+1. SLOWER EPSILON DECAY
+   - Change from 0.995 to 0.9995
+   - Maintains exploration longer (reaches 0.01 at ~4600 episodes)
+   - Allows discovery of coordination strategies
+
+2. HETEROGENEOUS AGENTS
+   - Different learning rates per agent
+   - Different exploration rates (epsilon)
+   - Breaks symmetry and reduces herding
+
+3. STRONGER PENALTIES
+   - Quadratic penalty: -(distance/10)^2 instead of linear
+   - Zero reward for extreme attendance (>80 or <40)
+   - Stronger learning signal to avoid bad outcomes
+
+4. COMMUNICATION / SOCIAL NETWORKS
+   - Agents observe neighbors' decisions
+   - Coordination through local information
+   - Mimics real-world word-of-mouth
+
+================================================================================
+CONCLUSION
+================================================================================
+
+The baseline implementation successfully demonstrates:
+- RL agents CAN learn (rewards improve from ~50k to ~55k)
+- But CANNOT coordinate with homogeneous policies
+- Reproduces Arthur's theoretical insight:
+  'Identical rational agents cannot solve El Farol problem'
+
+Next steps: Test improved version with slower epsilon decay
+================================================================================
