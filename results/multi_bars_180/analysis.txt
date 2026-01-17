@@ -1,0 +1,32 @@
+================================================================================
+MULTI-BARS TRAINING ANALYSIS
+================================================================================
+
+CONFIGURATION:
+  Episodes: 1000
+  Consumers: 180
+  Bars: 3 (optimal capacity: 60 each)
+  Price sensitivity: ×1.5
+
+RESULTS:
+  Avg Attendance/Bar: 1.27
+  Total Attendance: 3.80 / 180
+  Avg Price: $14.27
+  Consumer Reward: 81998
+
+PROBLEM:
+  Conservative Learning Trap (same as Improved baseline)
+  - Consumers learned staying home = optimal
+  - Bars have almost no customers (<1 person)
+  - Prices remain at maximum (no competition pressure)
+
+ROOT CAUSE:
+  1. Consumer epsilon reached 0.01 too quickly
+  2. Staying home reward (5.0) is safer than risky coordination
+  3. Empty bars → bad experience → reinforces staying home
+  4. Circular trap: nobody goes → nobody wants to go
+
+IMPLICATIONS FOR REPORT:
+  - Demonstrates coordination failure in multi-agent RL
+  - Risk-averse convergence in complex games
+  - Need for reward engineering or forced exploration
