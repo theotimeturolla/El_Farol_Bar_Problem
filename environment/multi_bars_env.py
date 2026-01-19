@@ -106,7 +106,7 @@ class MultiBarsEnv(ParallelEnv):
             choice = consumer_choices[consumer_agent]
             
             if choice == 0:  # Stayed home
-                rewards[consumer_agent] = 5.0
+                rewards[consumer_agent] = -5.0  # PENALTY for staying home
             else:
                 bar_idx = choice - 1
                 if bar_idx < self.n_bars:
@@ -116,7 +116,9 @@ class MultiBarsEnv(ParallelEnv):
                     # Utility = enjoyment - price paid
                     crowding_penalty = abs(attendance - bar.capacity_optimal) / 10.0
                     enjoyment = 10.0 - crowding_penalty
-                    utility = enjoyment - bar.price
+                    # Price penalty: increase sensitivity (consumers avoid expensive bars)
+                    price_penalty = bar.price * 1.5  # Increased sensitivity
+                    utility = enjoyment - price_penalty
                     
                     rewards[consumer_agent] = utility
                 else:

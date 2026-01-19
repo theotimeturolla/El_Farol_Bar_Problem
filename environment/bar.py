@@ -36,21 +36,27 @@ class Bar:
         """
         Calculate reward for the bar based on:
         - Revenue: attendance * (price - base_cost)
-        - Penalty for being too empty or too full
+        - Strong penalty for being empty (wasted opportunity)
+        - Penalty for being overcrowded
         """
         # Profit from customers
         revenue = attendance * (self.price - self.base_cost)
         
-        # Penalty for poor capacity utilization
-        occupancy_rate = attendance / self.capacity_optimal
-        if occupancy_rate < 0.5:
-            # Too empty - wasted capacity
-            capacity_penalty = -10 * (0.5 - occupancy_rate)
-        elif occupancy_rate > 1.5:
-            # Too crowded - poor service quality
-            capacity_penalty = -10 * (occupancy_rate - 1.5)
+        # STRONG incentive to attract customers
+        if attendance == 0:
+            # No customers = huge penalty
+            capacity_penalty = -100.0
+        elif attendance < self.capacity_optimal * 0.3:
+            # Very few customers = big penalty
+            occupancy_rate = attendance / self.capacity_optimal
+            capacity_penalty = -50 * (0.3 - occupancy_rate)
+        elif attendance > self.capacity_optimal * 1.5:
+            # Too crowded = penalty
+            occupancy_rate = attendance / self.capacity_optimal
+            capacity_penalty = -20 * (occupancy_rate - 1.5)
         else:
-            capacity_penalty = 0
+            # Good occupancy = bonus
+            capacity_penalty = 10.0
         
         reward = revenue + capacity_penalty
         

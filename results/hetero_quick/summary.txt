@@ -1,0 +1,32 @@
+HETEROGENEOUS CONSUMERS - RESULTS SUMMARY
+==========================================
+
+Configuration:
+- 200 episodes
+- 180 consumers with heterogeneous epsilon (0.15-0.25 fixed)
+- 3 bars with DDPG pricing
+
+Results (last 50 episodes):
+- Bar 0: Price=$14.85, Attendance=9.0
+- Bar 1: Price=$14.85, Attendance=8.8
+- Bar 2: Price=$14.86, Attendance=8.6
+- TOTAL: 26.5/180 (14.7%)
+
+PROBLEM:
+Conservative Learning Trap persists despite heterogeneous exploration.
+Consumers still learned that staying home is optimal.
+
+ROOT CAUSE ANALYSIS:
+1. Reward structure still favors staying home
+2. Training updates every 10 steps may be too slow
+3. DQN needs more sophisticated architecture or algorithm
+4. Possible fundamental issue with parameter sharing in this domain
+
+CONCLUSION:
+All 4 training attempts failed to achieve stable coordination:
+- Baseline: Extreme oscillations
+- Improved: Complete inaction (11.39 attendance)
+- Multi-bars (homogeneous): Complete inaction (0.5 per bar)
+- Multi-bars (heterogeneous): Partial inaction (9 per bar)
+
+The El Farol problem appears inherently difficult for standard MARL algorithms.
