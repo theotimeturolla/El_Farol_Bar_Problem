@@ -1,0 +1,56 @@
+FORCED PARTICIPATION - RÉSUMÉ DES RÉSULTATS
+============================================
+
+Configuration:
+- 300 episodes
+- 180 consumers avec epsilon hétérogène (0.10-0.20, mean=0.151)
+- 3 bars avec DDPG pricing
+- REWARD SHAPING:
+  * Stay home: pénalité exponentielle (-10, -15, -22.5, -33.75...)
+  * Go to bar: bonus +3.0
+
+RÉSULTATS FINAUX (derniers 50 épisodes):
+=========================================
+Bar 0: Prix=$14.85, Attendance=52.9
+Bar 1: Prix=$14.87, Attendance=55.0
+Bar 2: Prix=$14.87, Attendance=53.2
+TOTAL: 161.1/180 (89.5%)
+
+COMPARAISON AVEC TENTATIVES PRÉCÉDENTES:
+=========================================
+| Méthode              | Attendance | Participation | Verdict           |
+|----------------------|-----------|---------------|-------------------|
+| Baseline             | 60.72     | Oscillations  | Théorie validée   |
+| Improved             | 11.39     | 6.3%          | Trap complet      |
+| Multi-bars v1        | 1.5       | 0.8%          | Trap sévère       |
+| Multi-bars hetero    | 26.5      | 14.7%         | Trap partiel      |
+| Forced Participation | 161.1     | 89.5%         | SUCCÈS PARTIEL    |
+
+SUCCÈS:
+=======
+✓ Conservative Learning Trap RÉSOLU
+✓ 89.5% de participation (vs 14.7% avant)
+✓ Distribution équilibrée entre bars (52-55 par bar)
+✓ Coordination atteinte via reward shaping
+
+PROBLÈME RESTANT:
+=================
+✗ Prix au maximum (14.85-14.87$)
+✗ Aucune compétition par les prix
+✗ DDPG bars n'apprennent pas à baisser leurs prix
+
+CAUSE DU PROBLÈME DE PRIX:
+===========================
+1. Bars voient 50+ clients même à prix max
+2. Aucun incentive à baisser les prix
+3. Reward function des bars favorise:
+   - Revenue = attendance × (price - cost)
+   - Avec attendance élevée garantie, maximiser price est optimal
+4. Bars n'ont pas de feedback négatif pour prix élevés
+
+CONCLUSION:
+===========
+✓ SUCCÈS MAJEUR sur le problème de coordination
+✗ Nécessite fix additionnel pour la compétition par les prix
+
+Prochaine étape: Option 2 (Communication) ou modifier reward bars
